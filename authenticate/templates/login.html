@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>众测平台</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <style>
+        .error-info{
+            color:black;
+            height:100%;
+        }
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <form action="/login_action/" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <lable for="">用户名</lable>
+                    <input type="text" class="form-control" id="user">
+                </div>
+                <div class="form-group">
+                    <lable for="">密码</lable>
+                    <input type="password" class="form-control" id="password">
+                </div>
+                <div class="form-group">
+                    <lable for="">验证码</lable>
+                    <div class="row">
+                        <div class="col-md-6">
+                          <input type="text" class="form-control" id="captcha">
+                        </div>
+                        <div class="col-md-6">
+                            <img src="/get_valid_img.png" alt="" class="valid-img">
+                        </div>
+                    </div>
+                </div>
+                <input type="button" class="btn btn-primary" value="登 录">
+                <span class="error-info"></span>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script>
+    $(".btn-primary").click(function () {
+        $.ajax({
+            url:'',
+            type:'post',
+            data:{
+                user:$('#user').val(),
+                password:$('#password').val(),
+                captcha:$('#captcha').val(),
+                csrfmiddlewaretoken:$("[name='csrfmiddlewaretoken']").val(),
+            },
+            success:function (response) {
+                //判断是否通过验证
+                if (response.user){
+                    $('.error-info').html(response.user).css('color','forestgreen')
+                }
+                else{
+                    $('.error-info').html(response.error).css('color','firebrick')
+                }
+            }
+        })
+
+    });
+      //点击验证码图片异步刷新
+      $('.valid-img').click(function () {
+          {#src=$('.valid-img').prop('src')+"?";#}
+          {#$('.valid-img').prop('src',src);#}
+          this.src+='?';
+      })
+</script>
+</html>
